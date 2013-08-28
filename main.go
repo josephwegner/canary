@@ -43,7 +43,8 @@ func (a *Asset) confirmChecksum(coll *mgo.Collection, finished chan int) {
 
 	if newHash != a.Checksum {
 		fmt.Printf("Hashes did not match: %s != %s\n", newHash, a.Checksum)
-		err = coll.Update(bson.M{"_id": a.Id}, bson.M{"checksum": newHash, "url": a.Url})
+		a.Checksum = newHash
+		err = coll.Update(bson.M{"_id": a.Id}, a)
 		if err != nil {
 			fmt.Printf("Error updating hash, got error %v\n", err)
 		}
